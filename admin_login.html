@@ -82,7 +82,7 @@
         };
         if (accounts[username] === password) {
             localStorage.setItem('username', username);
-            window.location.href = 'admin_dashboard.php';
+            window.location.href = 'admin_dashboard.html';
         } else {
             const errorElement = document.getElementById('error');
             errorElement.textContent = '用户名或密码错误，请重试。';
