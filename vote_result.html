@@ -1,0 +1,108 @@
+<?php
+// 检查投票会话是否存在
+if (isset($_SESSION['vote_session'])) {
+    $vote_session = $_SESSION['vote_session'];
+    $vote_config = json_decode(file_get_contents('vote_config.json'), true);
+    
+    // 统计每个候选人的票数
+    $vote_counts = [];
+    foreach ($vote_session['votes'] as $votes) {
+        foreach ($votes as $candidate) {
+            if (!isset($vote_counts[$candidate])) {
+                $vote_counts[$candidate] = 0;
+            }
+            $vote_counts[$candidate]++;
+        }
+    }
+    
+    // 对候选人按票数排序
+    arsort($vote_counts);
+    
+    // 分离前三名和其余候选人
+    $top_three = array_slice($vote_counts, 0, 3, true);
+    $others = array_slice($vote_counts, 3, null, true);
+}
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八班投票系统 - 投票结果</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: linear-gradient(to bottom, #f4f4f4, #e0e0e0);
+        }
+        .header {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .result-container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .result-container:hover {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .result-container h2 {
+            text-align: center;
+            color: #333;
+        }
+        .result-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .result-container li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>八班投票系统 - 投票结果</h1>
+    </div>
+    <div class="result-container">
+        <h2>前三名候选人</h2>
+        <ul id="candidates-list"></ul>
+        <script>
+            // 模拟投票数据
+            let candidates = {
+                "候选人1": 20,
+                "候选人2": 30,
+                "候选人3": 15
+            };
+            // 对候选人按票数排序
+            let sortedCandidates = Object.entries(candidates).sort((a, b) => b[1] - a[1]).slice(0, 3);
+            // 更新列表
+            function updateList() {
+                const list = document.getElementById('candidates-list');
+                list.innerHTML = '';
+                sortedCandidates.forEach(([candidate, votes]) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${DOMPurify.sanitize(candidate)}: ${votes} 票`;
+                    list.appendChild(li);
+                });
+            }
+            // 初始化列表
+            updateList();
+            // 实时刷新功能
+            setInterval(() => {
+                // 这里可以添加获取最新投票数据的逻辑
+                updateList();
+            }, 5000); // 每5秒刷新一次
+        </script>
+    </div>
+</body>
+</html>

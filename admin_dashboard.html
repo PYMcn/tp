@@ -1,0 +1,56 @@
+<!-- 此处原PHP代码用于检查登录和获取用户名，由于要纯HTML实现，需后续通过JavaScript处理登录逻辑 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理主页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: linear-gradient(to bottom, #f4f4f4, #e0e0e0);
+        }
+        .header {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .dashboard-container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .dashboard-container:hover {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .dashboard-container h2 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>八班投票系统 - 后台管理主页面</h1>
+    </div>
+    <div class="dashboard-container">
+        <h2>欢迎，<span id="username"></span>！</h2><script>
+    // 假设通过某种方式获取用户名，这里简单模拟
+    const username = localStorage.getItem('username');
+    if (username) {
+        document.getElementById('username').textContent = DOMPurify.sanitize(username);
+    }
+</script>
+        <!-- 后续可添加更多功能按钮和表单 -->
+    </div>
+</body>
+</html>

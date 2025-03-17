@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八班投票系统 - 开始投票</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: linear-gradient(to bottom, #f4f4f4, #e0e0e0);
+        }
+        .header {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .vote-container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .vote-container:hover {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .vote-container h2 {
+            text-align: center;
+            color: #333;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress {
+            width: <span id="progress-width"></span>%;
+            height: 30px;
+            background-color: #007BFF;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>八班投票系统 - 开始投票</h1>
+    </div>
+    <div class="vote-container">
+        <h2>第 <span id="current-voter"></span> 人投票 (<span id="current-voter"></span>/100 票)</h2><script>
+    // 初始化投票会话
+    let voteSession = { 
+        currentVoter: 1, 
+        votes: [] 
+    };
+    // 更新进度条和投票信息
+    function updateProgress() {
+        const progressWidth = (voteSession.currentVoter / 100) * 100;
+        document.getElementById('progress-width').textContent = progressWidth;
+        document.getElementById('current-voter').textContent = voteSession.currentVoter;
+    }
+    // 处理投票提交
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const selectedCandidates = [];
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        checkboxes.forEach(checkbox => {
+            selectedCandidates.push(DOMPurify.sanitize(checkbox.value));
+        });
+        voteSession.votes.push(selectedCandidates);
+        voteSession.currentVoter++;
+        updateProgress();
+        if (voteSession.currentVoter > 100) {
+            window.location.href = 'vote_result.html';
+        }
+    });
+    // 初始化进度条和投票信息
+    updateProgress();
+    // 实时刷新功能
+    setInterval(() => {
+        // 这里可以添加获取最新投票数据的逻辑
+        updateProgress();
+    }, 5000); // 每5秒刷新一次
+</script>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <form method="post" action="vote.php">
+            <input type="checkbox" name="candidates[]" value="候选人1">候选人1<br>
+            <input type="checkbox" name="candidates[]" value="候选人2">候选人2<br>
+            <input type="checkbox" name="candidates[]" value="候选人3">候选人3<br>
+            <input type="submit" value="提交投票">
+        </form>
+    </div>
+</body>
+</html>
